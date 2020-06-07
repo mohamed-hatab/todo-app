@@ -4,28 +4,11 @@ const User = require("../models/user.js")
 const jwt = require("jsonwebtoken")
 const multer = require("multer")
 const sharp = require("sharp")
-const emailHandler = require("../mail.js")
-const welcomeEmail = emailHandler.welcomeEmail
-const cancelEmail = emailHandler.cancelEmail
+const frequentlyUsedFunctions = require("../frequentlyUsedFunctions.js")
+const welcomeEmail = frequentlyUsedFunctions.welcomeEmail
+const cancelEmail = frequentlyUsedFunctions.cancelEmail
+const auth = frequentlyUsedFunctions.auth
 
-//authorization middleware function as it will be used many times
-// its function is to check if the sent token is verified and belongs to user in db ... then returns the token and its owner in the req body
-async function auth(req, res, next) {
-  try {
-    const token = req.header("Authorization")
-    const decoded = await jwt.verify(token, "sakalans")
-    const user = await User.findOne({
-      _id: decoded._id,
-      'tokens.token':token
-    })
-    if(!user){throw new Error()}
-    req.user = user
-    req.usedToken = token
-    next()
-  } catch (e) {
-    res.send("not authorized")
-  }
-}
 
 const upload = multer({
   limits:{fileSize:2000000},

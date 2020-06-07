@@ -3,25 +3,9 @@ const router = new express.Router()
 const jwt = require("jsonwebtoken")
 const Task = require("../models/task.js")
 const User = require("../models/user.js")
+const frequentlyUsedFunctions = require("../frequentlyUsedFunctions.js")
+const auth = frequentlyUsedFunctions.auth
 
-async function auth(req, res, next) {
-  try {
-    const token = req.header("Authorization")
-    const decoded = await jwt.verify(token, "sakalans")
-    const user = await User.findOne({
-      _id: decoded._id,
-      'tokens.token': token
-    })
-    if (!user) {
-      throw new Error()
-    }
-    req.user = user
-    req.usedToken = token
-    next()
-  } catch (e) {
-    res.send("not authorized")
-  }
-}
 
 router.post("/newtask", auth, async (req, res) => {
   try {
