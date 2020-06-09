@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 const userRouter = require(__dirname + "/router/user.js")
 const taskRouter = require(__dirname + "/router/task.js")
 
-mongoose.connect('mongodb://localhost:27017/database', {
+mongoose.connect(process.env.DB_STRING || 'mongodb://localhost:27017/database', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
